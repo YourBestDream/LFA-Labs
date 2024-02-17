@@ -26,7 +26,7 @@ When we talk about formal languages, imagine we're diving into the world of secr
 
 The project is structured around two primary classes: Grammar and Automata, each representing fundamental concepts in the theory of formal languages and automata.
 
-* `Grammar` Class: This class encapsulates the components of a formal grammar, including non-terminal symbols (VN), terminal symbols (VT), and production rules (P). An instance of Grammar is initialized with predefined symbols and rules that represent the grammar of a simple language.
+* `Grammar` Class: This class encapsulates the components of a formal grammar, including non-terminal symbols (`VN`), terminal symbols (`VT`), and production rules (`P`). An instance of Grammar is initialized with predefined symbols and rules that represent the grammar of a simple language.
 
 ```python
 
@@ -113,12 +113,12 @@ match user_choice:
 ## Results
 As a result we get the following:
 * Generating 5 strings with progresson shown using the grammar provided:
-![alt text](image.png)
-* Checking if a string belongs to the grammar:
-    1) Positive case:
-    ![alt text](case_positive.png)
-    2) Negative case:
     ![alt text](image.png)
+* Checking if a string belongs to the grammar:
+    1. Positive case:
+        ![alt text](case_positive.png)
+    2. Negative case:
+        ![alt text](image.png)
 
 ## Conclusion 
 

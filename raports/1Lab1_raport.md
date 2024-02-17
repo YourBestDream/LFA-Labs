@@ -118,7 +118,7 @@ As a result we get the following:
     * Positive case:
         ![alt](case_positive.png)
     * Negative case:
-        ![alt](image.png)
+        ![alt](case_negative.png)
 
 ## Conclusion 
 

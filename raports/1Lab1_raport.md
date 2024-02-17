@@ -92,9 +92,9 @@ class Grammar:
             print("String cannot be obtained from the grammar.")
             return False
     ```
-Also we have a "construction point" where veerything is being collected - main.py file. There you can choose the option to perform:
+Also we have a "construction point" where veerything is being collected - `main.py` file. There you can choose the option to perform:
     * Generate the strings
-    * Check if string beongs to grammar
+    * Check if string belongs to grammar
 ```python
 from classes.Automata import Automata
 
@@ -118,7 +118,7 @@ As a result we get the following:
     * Positive case:
         ![alt](case_positive.png)
     * Negative case:
-        ![alt](case_negative.png)
+        ![alt text](case_negative.png)
 
 ## Conclusion 
 

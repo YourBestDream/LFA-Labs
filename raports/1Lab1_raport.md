@@ -115,10 +115,10 @@ As a result we get the following:
 * Generating 5 strings with progresson shown using the grammar provided:
     ![alt text](image.png)
 * Checking if a string belongs to the grammar:
-    1. Positive case:
-        ![alt text](case_positive.png)
-    2. Negative case:
-        ![alt text](image.png)
+    * Positive case:
+        ![alt](case_positive.png)
+    * Negative case:
+        ![alt](image.png)
 
 ## Conclusion 
 

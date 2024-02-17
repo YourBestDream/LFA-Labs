@@ -126,6 +126,6 @@ In conclusion I want to say that the implementation effectively demonstrates the
 
 ## References
 
-https://www.youtube.com/watch?v=dQw4w9WgXcQ
-https://www.youtube.com/watch?v=Qa6csfkK7_I
-https://www.youtube.com/watch?v=40i4PKpM0cI
+* https://www.youtube.com/watch?v=dQw4w9WgXcQ
+* https://www.youtube.com/watch?v=Qa6csfkK7_I
+* https://www.youtube.com/watch?v=40i4PKpM0cI

@@ -1,5 +1,6 @@
 import networkx as nx
 import matplotlib.pyplot as plt
+import numpy as np
 
 class FiniteAutomaton:
     def __init__(self):
@@ -82,54 +83,44 @@ class FiniteAutomaton:
     
     def draw_dfa(self, dfa_transitions_named, dfa_final_states_names):
         G = nx.DiGraph()
-        
-        # Add nodes
+        # Add nodes with their labels
         for state in dfa_transitions_named:
-            G.add_node(state, is_final=state in dfa_final_states_names)
+            G.add_node(state)
         
-        # Add edges
+        # Add edges with their labels
         for state, transitions in dfa_transitions_named.items():
-            for input_symbol, next_state in transitions.items():
-                G.add_edge(state, next_state, label=input_symbol)
+            for symbol, next_state in transitions.items():
+                G.add_edge(state, next_state, label=symbol)
         
-        # Position nodes
-        pos = nx.spring_layout(G, seed=42)  # Fixed seed for reproducible layout
-
-        # Draw nodes
-        nx.draw_networkx_nodes(G, pos, node_size=700, node_color='skyblue', alpha=0.6)
-        nx.draw_networkx_nodes(G, pos, nodelist=dfa_final_states_names, node_size=700, node_color='lightgreen', alpha=0.6)
+        pos = nx.circular_layout(G)  # Using circular layout for clearer structure
         
-        # Draw edges
-        nx.draw_networkx_edges(G, pos, connectionstyle='arc3,rad=0.1')
+        # Draw the graph
+        nx.draw_networkx_nodes(G, pos, node_size=700, node_color='skyblue', edgecolors='black')
         nx.draw_networkx_labels(G, pos)
-
-        # Draw edge labels
-        edge_labels = nx.get_edge_attributes(G, 'label')
-        edge_labels_pos = self._get_edge_label_pos(pos)
-        nx.draw_networkx_edge_labels(G, edge_labels_pos, edge_labels=edge_labels)
-
+        edges = nx.draw_networkx_edges(G, pos, arrowstyle='->', arrowsize=20, connectionstyle='arc3,rad=0.2')
+        
+        # Handle self-loops after drawing other edges to avoid overlap issues
+        for state, transitions in dfa_transitions_named.items():
+            for symbol, next_state in transitions.items():
+                if state == next_state:  # Identify self-loops
+                    loop_pos = np.array(pos[state])
+                    # Drawing self-loop with an arc away from the node
+                    plt.annotate("", xy=loop_pos, xycoords='data',
+                                 xytext=loop_pos + np.array([0, 0.4]), textcoords='data',
+                                 arrowprops=dict(arrowstyle="->", color="red",
+                                                 shrinkA=15, shrinkB=15,
+                                                 patchA=None, patchB=None,
+                                                 connectionstyle="arc3,rad=0.3"))
+                    # Placing text for self-loop
+                    plt.text(loop_pos[0], loop_pos[1] + 0.5, symbol, ha='center', color="red")
+        
+        # Highlight final states
+        nx.draw_networkx_nodes(G, pos, nodelist=dfa_final_states_names, node_color='lightgreen', edgecolors='black')
+        
+        # Edge labels, avoiding self-loop edges since they're handled separately
+        edge_labels = {(u, v): d['label'] for u, v, d in G.edges(data=True) if u != v}
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, label_pos=0.3)
+        
+        plt.title('DFA Visualization')
         plt.axis('off')
         plt.show()
-
-    def _get_edge_label_pos(self, pos):
-        """Adjust edge label positions to reduce overlap and improve loop visibility."""
-        edge_labels_pos = {}
-        for edge in pos:
-            # Shift edge labels towards the target node to reduce overlap with the node itself
-            source_pos = np.array(pos[edge[0]])
-            target_pos = np.array(pos[edge[1]])
-
-            # For self-loops, position the label above the node
-            if edge[0] == edge[1]:
-                dx, dy = target_pos - source_pos
-                dist = np.sqrt(dx ** 2 + dy ** 2)
-                if dist == 0:  # Self-loop
-                    # Adjust these values to change the loop label position
-                    edge_labels_pos[edge] = target_pos + np.array([0, 0.1])
-                continue
-
-            # Adjust this value to move the label closer/further to the target node
-            label_pos = source_pos * 0.6 + target_pos * 0.4
-            edge_labels_pos[(edge[0], edge[1])] = label_pos
-
-        return edge_labels_pos

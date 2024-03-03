@@ -16,6 +16,7 @@ class Grammar:
         #     'A': ['1B', '0'],
         #     'B': ['0A', '1']
         # }
+        
     def set_grammar(self, VN, VT, P):
         self.VN = VN
         self.VT = VT

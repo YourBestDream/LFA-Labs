@@ -1,21 +1,21 @@
 class Grammar:
     def __init__(self):
-        # Type 2 grammar
-        self.VN = ['S', 'B', 'C']
-        self.VT = ['a', 'b', 'c']
-        self.P = {
-            'S': ['aB'],
-            'B': ['aC', 'bB'],
-            'C': ['bB', 'c', 'aS', 'ε']
-        }
-        #Type 3 grammar
-        # self.VN = ['S', 'A', 'B']
-        # self.VT = ['1', '0']
+        # # Type 2 grammar
+        # self.VN = ['S', 'B', 'C']
+        # self.VT = ['a', 'b', 'c']
         # self.P = {
-        #     'S': ['0A'],
-        #     'A': ['1B', '0'],
-        #     'B': ['0A', '1']
+        #     'S': ['aB'],
+        #     'B': ['aC', 'bB'],
+        #     'C': ['bB', 'c', 'aS', 'ε']
         # }
+        # Type 3 grammar
+        self.VN = ['S', 'A', 'B']
+        self.VT = ['1', '0']
+        self.P = {
+            'S': ['0A'],
+            'A': ['1B', '0'],
+            'B': ['0A', '1']
+        }
 
     def set_grammar(self, VN, VT, P):
         self.VN = VN

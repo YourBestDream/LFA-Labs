@@ -18,6 +18,12 @@ Regular expressions are a critical tool for programmers, data scientists, and sy
     c. **Bonus point**: write a function that will show sequence of processing regular expression (like, what you do first, second and so on)
 Write a good report covering all performed actions and faced difficulties.
 
+<!-- In this will I, Nikita Popov, also known as ScarletLiar or Not A Whale leave the following to my fellow comrade:
+
+4 marvelous cat - feed 'em and do not fuck around with them or you will find out
+
+A pair of recently purchased sneakers - these magnificent specimens of footwear art, acquired by me in a moment of inspiration and understanding of the deep essence of fashion. They are not just sneakers, they are the embodiment of freedom and my unwavering belief that style is not what you wear, but how you wear it. Dmitry, wear them with pride and lightness, let every step remind you of the limitless democracy that you can deliver in all the corners of galaxy. -->
+
 ## Implementation Description
 * `Regex` Class: The Regex class serves as the foundation of this tool, encapsulating methods that illustrate the mechanics of regular expressions through systematic pattern generation and explanation. This class is designed not just to generate combinations but to explain the sequential processing of regex components, thereby demystifying complex regex patterns.
 

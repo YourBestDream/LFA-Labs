@@ -1,4 +1,4 @@
-# Regular expressions
+# Regular Expressions
 
 ### Course: Formal Languages & Finite Automata
 ### Author: Popov Nichita
@@ -22,190 +22,88 @@ Write a good report covering all performed actions and faced difficulties.
 
 4 marvelous cat - feed 'em and do not fuck around with them or you will find out
 
-A pair of recently purchased sneakers - these magnificent specimens of footwear art, acquired by me in a moment of inspiration and understanding of the deep essence of fashion. They are not just sneakers, they are the embodiment of freedom and my unwavering belief that style is not what you wear, but how you wear it. Dmitry, wear them with pride and lightness, let every step remind you of the limitless democracy that you can deliver in all the corners of galaxy. -->
+A pair of recently purchased sneakers - these magnificent specimens of footwear art, acquired by me in a moment of inspiration and understanding of the deep essence of fashion. They are not just sneakers, they are the embodiment of freedom and my unwavering belief that style is not what you wear, but how you wear it. Wear them with pride and lightness, let every step remind you of the limitless democracy that you can deliver in all the corners of galaxy. -->
 
 ## Implementation Description
-* `Regex` Class: The Regex class serves as the foundation of this tool, encapsulating methods that illustrate the mechanics of regular expressions through systematic pattern generation and explanation. This class is designed not just to generate combinations but to explain the sequential processing of regex components, thereby demystifying complex regex patterns.
+The `SimpleRegexGenerator` class in `Regex.py` represents a sophisticated tool designed to illustrate the inner workings of regular expressions through the generation of valid symbol combinations and the methodical explanation of pattern processing. This class effectively demystifies complex regex patterns by breaking down their components and sequentially explaining each part's role.
 
-    **Core Functionalities**
-    1) Methodological Explanation: Through the `explain_process` method, the class offers a step-by-step breakdown of how each part of a regex pattern is processed. This pedagogical approach aids users in understanding the logic behind pattern matching and the significance of regex syntax elements.
+**Core Functionalities**
+1) **Methodological Explanation**: The `explain_process` method offers a detailed, step-by-step explanation of the regex pattern processing. This pedagogical approach is instrumental in clarifying the significance of each regex component, thereby enhancing the user's understanding of pattern matching mechanics.
 
-    ```python
+```python
+    def explain_process(self):
+        """Prints the explanation of how the pattern was processed."""
+        print("\nExplanation of Pattern Processing:")
+        for step in self.explanation:
+            print(step)
+        print("\n")
+```
+   
+2) **Dynamic Pattern Generation**: Utilizing Python's `itertools.product`, the `generate_strings` method dynamically produces all possible string combinations from the decomposed regex pattern components. This functionality highlights the regex's capability to succinctly represent a vast array of string variations, showcasing its power in text processing.
 
-    def explain_process(self, steps):
-    """
-    Explain the sequence of processing the regular expression.
-    
-    Parameters:
-    - steps: A list of strings, each describing a step in processing the regex.
-    """
-    print("\nProcessing Sequence:")
-    for i, step in enumerate(steps, start=1):
-        print(f"{i}. {step}")
-    print("\n")
-
-    ```
-
-    2) Dynamic Pattern Generation: The `generate_combinations` method leverages Python's `itertools.product` to dynamically produce all conceivable string combinations from specified pattern components. This method underscores the power of regex in capturing a wide array of string variations with concise syntax.
-
-    ```python
-
-    def generate_combinations(self, parts, description, steps):
+```python
+    def generate_strings(self, parts):
         """
-        Generalized function to generate and print all combinations based on the given parts.
-        
-        Parameters:
-        - parts: A list of lists, where each inner list represents possible variations of a regex part.
-        - description: A string describing the regular expression being processed.
-        - steps: A list of strings, each describing a step in processing the regex.
+        Generate strings from the parsed pattern components.
         """
-        self.explain_process(steps)
-
-        print(f"=========================================================\n")
-        print(f"All possible combinations for {description}")
-        print(f"\n=========================================================\n")
         for combination in itertools.product(*parts):
-            print(f''.join(combination))
+            yield ''.join(combination)
+```
 
-    ```
+3) **Modular Pattern Parsing**: The `parse_pattern` function breaks down the regex pattern into its fundamental components, applying specific logic based on the nature of each component (e.g., quantifiers, groups, optional elements). This modular parsing is critical for generating accurate string combinations and for the instructional breakdown of the pattern processing sequence.
 
-    **Method Descriptions**
-    1) `first_regex` Method: Constructs a multifaceted regex pattern, highlighting optional characters, fixed repetitions, alternative selections, and quantified occurrences. This method exemplifies the nuanced control regex offers over string matching criteria, providing a broad spectrum of potential matches from a single pattern description.
+```python
+    def parse_pattern(self):
+        """
+        Parses the simplified pattern into components, with explanations.
+        """
+        parts = []
+        i = 0
+        while i < len(self.pattern):
+            if self.pattern[i] == '(':
+                end = self.pattern.find(')', i)
+                if end == -1:
+                    raise ValueError("Unmatched parenthesis")
+                group = self.pattern[i+1:end].split('|')
+                parts.append(group)
+                self.add_explanation(self.pattern[i:end+1], "Either of " + " or ".join(group) + " appears exactly once")
+                i = end + 1
+            elif self.pattern[i] == '{':
+                end = self.pattern.find('}', i)
+                if end == -1:
+                    raise ValueError("Unmatched curly brace")
+                repeat = int(self.pattern[i+1:end])
+                if parts:
+                    last_part = parts.pop()
+                    parts.append([''.join([c]*repeat) for c in last_part])
+                self.add_explanation(self.pattern[i-1:end+1], f"Previous character appears exactly {repeat} times")
+                i = end + 1
+            elif i + 1 < len(self.pattern) and self.pattern[i+1] in '?*+':
+                if self.pattern[i+1] == '?':
+                    parts.append([self.pattern[i], ''])
+                    self.add_explanation(self.pattern[i:i+2], f"'{self.pattern[i]}' is optional")
+                elif self.pattern[i+1] == '*':
+                    parts.append(['', self.pattern[i]])
+                    self.add_explanation(self.pattern[i:i+2], f"'{self.pattern[i]}' appears zero or more times")
+                elif self.pattern[i+1] == '+':
+                    parts.append([self.pattern[i], self.pattern[i]*2])
+                    self.add_explanation(self.pattern[i:i+2], f"'{self.pattern[i]}' appears one or more times")
+                i += 2
+            else:
+                parts.append([self.pattern[i]])
+                self.add_explanation(self.pattern[i], f"'{self.pattern[i]}' appears exactly once")
+                i += 1
+        return parts
+```
 
-    ```python
-
-    def first_regex(self):
-        parts = [
-            ['', 'M'],  # M?
-            ['NN'],  # N^2
-            [''.join(x) for x in itertools.product('OP', repeat=3)],  # (O|P)^3
-            [''.join(['Q']*i) for i in range(6)],  # Q^*
-            [''.join(['R']*i) for i in range(1, 6)],  # R^+
-        ]
-        steps = [
-            "Process 'M?' - M is optional",
-            "Process 'N^2' - N appears exactly twice",
-            "Process '(O|P)^3' - Either O or P appears exactly three times in any combination",
-            "Process 'Q^*' - Q appears any number of times up to 5",
-            "Process 'R^+' - R appears at least once and up to 5 times"
-        ]
-        self.generate_combinations(parts, "M? N^2 (O|P)^3 Q^* R^+", steps)
-
-    ```
-
-    2) `second_regex` Method: This method showcases a different aspect of regex capabilities, focusing on character sets, quantifiers, and choice operators. It's particularly useful for demonstrating how regex can be used to define patterns with varying character repetitions and selections, essential for tasks like parsing and data extraction.
-
-    ```python
-
-    def second_regex(self):
-        parts = [
-            [''.join(x) for x in itertools.product('XYZ', repeat=3)],  # (X|Y|Z)^3
-            [''.join(['8']*i) for i in range(1, 6)],  # 8^+
-            ['9', '0'],  # (9|0)
-        ]
-        steps = [
-            "Process '(X|Y|Z)^3' - X, Y, or Z appears exactly three times in any combination",
-            "Process '8^+' - 8 appears at least once and up to 5 times",
-            "Process '(9|0)' - Either 9 or 0 appears exactly once"
-        ]
-        self.generate_combinations(parts, "(X|Y|Z)^3 8^+ (9|0)", steps)
-
-    ```
-
-    3) `third_regex` Method: Emphasizes the flexibility of regex in managing optional elements, repetitions, and specific character choices. It's tailored to exhibit how subtle variations in regex patterns can significantly alter the scope of matched strings, illustrating the importance of precise pattern crafting.
-
-    ```python
-
-    def third_regex(self):
-        parts = [
-            ['H', 'i'],  # (H|i)
-            ['J', 'K'],  # (J|K)
-            [''.join(['L']*i) for i in range(6)],  # L^*
-            ['', 'N'],  # N?
-        ]
-        steps = [
-            "Process '(H|i)' - Either H or i appears exactly once",
-            "Process '(J|K)' - Either J or K appears exactly once",
-            "Process 'L^*' - L appears any number of times up to 5",
-            "Process 'N?' - N is optional"
-        ]
-        self.generate_combinations(parts, "(H|i) (J|K) L^* N?", steps)
-
-    ```
-
-* `main.py` Driver Script: This script acts as the entry point for regex pattern exploration, sequentially invoking the `Regex` class methods to generate and explain multiple regex patterns. Its straightforward structure makes it easy for users to add new patterns for exploration, enhancing the tool's versatility and adaptability to different learning or development needs.
+**Practical Application with `main.py`**
+The driver script `main.py` illustrates the application of the `SimpleRegexGenerator` class by inputting complex regex patterns and producing both the valid combinations and the explanatory processing sequence. This script exemplifies how the class can be leveraged for educational purposes, making it a versatile tool for both learning and development tasks related to regex.
 
 ## Results
-
-Here is the output for method `third_regex` including explanation, all possible combinations and remark about which regex is being processed:
-
-```
-Processing Sequence:
-1. Process '(H|i)' - Either H or i appears exactly once
-2. Process '(J|K)' - Either J or K appears exactly once
-3. Process 'L^*' - L appears any number of times up to 5
-4. Process 'N?' - N is optional
-
-
-=========================================================
-
-All possible combinations for (H|i) (J|K) L^* N?
-
-=========================================================
-
-HJ
-HJN
-HJL
-HJLN
-HJLL
-HJLLN
-HJLLL
-HJLLLN
-HJLLLL
-HJLLLLN
-HJLLLLL
-HJLLLLLN
-HK
-HKN
-HKL
-HKLN
-HKLL
-HKLLN
-HKLLL
-HKLLLN
-HKLLLL
-HKLLLLN
-HKLLLLL
-HKLLLLLN
-iJ
-iJN
-iJL
-iJLN
-iJLL
-iJLLN
-iJLLL
-iJLLLN
-iJLLLL
-iJLLLLN
-iJLLLLL
-iJLLLLLN
-iK
-iKN
-iKL
-iKLN
-iKLL
-iKLLN
-iKLLL
-iKLLLN
-iKLLLL
-iKLLLLN
-iKLLLLL
-iKLLLLLN
-```
+The output for the `SimpleRegexGenerator` class demonstrates the successful generation of string combinations that conform to the input regex patterns. Additionally, the processing sequence explanations offer insightful revelations into the logic behind regex pattern interpretation, enriching the user's understanding of regex capabilities and applications.
 
 ## Conclusion
-
-This lab has highlighted the indispensable role of regular expressions in text manipulation and pattern matching, integral to various computing tasks. Through the implementation and exploration of complex regex patterns, we've not only met the lab's educational objectives but also gained a profound understanding of regex's capabilities and applications. The process of generating valid combinations and explaining the processing sequence of regex patterns provided practical insights into their power and flexibility. While focused on specific regex constructs, the skills and knowledge acquired are transferable to a broad array of computing contexts. This experience not only fulfills the lab's goals but also sets the stage for further exploration into advanced text processing and pattern recognition challenges.
+This laboratory work has underscored the pivotal role of regular expressions in text manipulation and pattern matching across various computing disciplines. Through the development and exploration of the `SimpleRegexGenerator` class, we have achieved a comprehensive understanding of regex's functionality and versatility. The ability to generate valid combinations and sequentially explain regex pattern processing has provided invaluable insights, emphasizing the adaptability and efficiency of regex in handling complex text processing tasks. This project has not only met the educational objectives set forth but has also prepared us for advanced applications of regex in computing.
 
 ## References
 

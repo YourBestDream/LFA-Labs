@@ -1,13 +1,15 @@
 from classes.CNFConverter import CNFConverter
 
-grammar_22 = {
+Vn = ['S', 'A', 'B', 'C', 'E']  # Non-terminal symbols
+Vt = ['a', 'b']  # Terminal symbols
+P = {
     'S': {'aB', 'AC'},
     'A': {'a', 'ACSC', 'BC'},
     'B': {'b', 'aA'},
-    'C': {'', 'BA'},
+    'C': {'', 'BA'},  # The empty string representing an epsilon production
     'E': {'bB'}
 }
 
-converter = CNFConverter(grammar_22)
-cnf_grammar = converter.convert_to_cnf()
-print(cnf_grammar)
+chomsky_grammar = CNFConverter(Vn, Vt, P)
+
+chomsky_grammar.normalize_grammar()

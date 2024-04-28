@@ -39,6 +39,14 @@ class Lexer:
                 self.advance()
                 return Token(TokenType.MINUS)
 
+            if self.current_char == '*':
+                self.advance()
+                return Token(TokenType.MULT)
+
+            if self.current_char == '/':
+                self.advance()
+                return Token(TokenType.DIV)
+
             if self.current_char == '(':
                 self.advance()
                 return Token(TokenType.LPAREN)
@@ -49,6 +57,7 @@ class Lexer:
 
             self.error()  # If none match, raise an error
         return Token(TokenType.EOF)
+
 
     def error(self):
         raise Exception(f'Invalid character: {self.current_char}')

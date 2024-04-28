@@ -40,7 +40,9 @@ class Parser:
             token = self.current_token
             if token.type == TokenType.PLUS:
                 self.eat(TokenType.PLUS)
+                operator = '+'
             elif token.type == TokenType.MINUS:
                 self.eat(TokenType.MINUS)
-            node = BinaryOperator(left=node, operator=token.type, right=self.term())
+                operator = '-'
+            node = BinaryOperator(left=node, operator=operator, right=self.term())
         return node
